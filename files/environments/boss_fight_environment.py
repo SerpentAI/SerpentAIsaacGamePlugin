@@ -74,6 +74,7 @@ class BossFightEnvironment(Environment):
             "isaac_hp": 1,
             "isaac_hps": collections.deque(np.full((100,), 6), maxlen=100),
             "isaac_alive": True,
+            "boss_hp_total": self.game_api.boss_hp,
             "boss_hp": self.game_api.boss_hp,
             "boss_hps": collections.deque(np.full((100,), self.game_api.boss_hp), maxlen=100),
             "boss_dead": False,
