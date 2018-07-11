@@ -72,13 +72,15 @@ class BossFightEnvironment(Environment):
     def reset_game_state(self):
         self.game_state = {
             "isaac_hp": 1,
-            "isaac_hps": collections.deque(np.full((16,), 6), maxlen=16),
+            "isaac_hps": collections.deque(np.full((100,), 6), maxlen=100),
             "isaac_alive": True,
             "boss_hp": self.game_api.boss_hp,
-            "boss_hps": collections.deque(np.full((16,), self.game_api.boss_hp), maxlen=16),
+            "boss_hps": collections.deque(np.full((100,), self.game_api.boss_hp), maxlen=100),
             "boss_dead": False,
             "damage_taken": False,
-            "damage_dealt": False
+            "damage_dealt": False,
+            "steps_since_damage_taken": 0,
+            "steps_since_damage_dealt": 100,
         }
 
     def update_game_state(self, game_frame):
@@ -91,6 +93,11 @@ class BossFightEnvironment(Environment):
 
         self.game_state["damage_taken"] = isaac_hp < self.game_state["isaac_hp"]
 
+        if self.game_state["damage_taken"]:
+            self.game_state["steps_since_damage_taken"] = 0
+        else:
+            self.game_state["steps_since_damage_taken"] += 1
+
         self.game_state["isaac_hp"] = isaac_hp
         self.game_state["isaac_hps"].appendleft(isaac_hp)
 
@@ -100,6 +107,11 @@ class BossFightEnvironment(Environment):
         boss_hp = self.game_api.get_boss_hp(game_frame)
 
         self.game_state["damage_dealt"] = boss_hp < self.game_state["boss_hp"]
+
+        if self.game_state["damage_dealt"]:
+            self.game_state["steps_since_damage_dealt"] = 0
+        else:
+            self.game_state["steps_since_damage_dealt"] += 1
 
         if boss_hp == 0:
             if self.game_api.is_boss_dead(game_frame):
