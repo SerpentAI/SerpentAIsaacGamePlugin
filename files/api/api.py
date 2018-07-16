@@ -9,8 +9,6 @@ import serpent.cv
 import numpy as np
 import skimage.measure
 
-import pyperclip
-
 import time
 
 
@@ -97,15 +95,13 @@ class AIsaacAPI(GameAPI):
         time.sleep(0.5)
 
         for item in items:
-            pyperclip.copy(f"giveitem c{item.value}")
-            input_controller.tap_keys([KeyboardKey.KEY_LEFT_CTRL, KeyboardKey.KEY_V], duration=0.1)
+            input_controller.type_string(f"giveitem c{item.value}")
             time.sleep(0.1)
             input_controller.tap_key(KeyboardKey.KEY_ENTER)
             time.sleep(0.1)
-
+    
         if (isinstance(boss, Bosses) or isinstance(boss, DoubleBosses)) and boss.value != 0:
-            input_controller.type_string("goto s.bos")
-            input_controller.type_string(f"s.{boss.value}")
+            input_controller.type_string(f"goto s.boss.{boss.value}")
             time.sleep(0.1)
 
             input_controller.tap_key(KeyboardKey.KEY_ENTER)
@@ -117,8 +113,7 @@ class AIsaacAPI(GameAPI):
             input_controller.tap_key(KeyboardKey.KEY_ENTER)
             time.sleep(0.2)
         elif isinstance(boss, Bosses) and boss.value == 0:
-            pyperclip.copy("stage 9")
-            input_controller.tap_keys([KeyboardKey.KEY_LEFT_CTRL, KeyboardKey.KEY_V], duration=0.1)
+            input_controller.type_string("stage 9")
             time.sleep(0.1)
 
             input_controller.tap_key(KeyboardKey.KEY_ENTER)
@@ -130,9 +125,10 @@ class AIsaacAPI(GameAPI):
             time.sleep(0.1)
             input_controller.tap_key(KeyboardKey.KEY_ENTER)
             time.sleep(0.2)
+
+        # TODO: Mega satan also has an activation 
         elif isinstance(boss, MiniBosses):
-            pyperclip.copy(f"goto s.miniboss.{boss.value}")
-            input_controller.tap_keys([KeyboardKey.KEY_LEFT_CTRL, KeyboardKey.KEY_V], duration=0.1)
+            input_controller.type_string(f"goto s.miniboss.{boss.value}")
             time.sleep(0.1)
 
             input_controller.tap_key(KeyboardKey.KEY_ENTER)

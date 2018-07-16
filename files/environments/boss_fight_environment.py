@@ -32,11 +32,15 @@ class BossFightEnvironment(Environment):
         if items is None:
             items = list()
 
-        filtered_items = list()
+        if isinstance(items, list):
+            filtered_items = list()
 
-        for item in items:
-            if isinstance(item, Items):
-                filtered_items.append(item)
+            for item in items:
+                if isinstance(item, Items):
+                    filtered_items.append(item)
+
+        elif isinstance(items, dict):
+            filtered_items = items
 
         self.items = filtered_items
 
@@ -61,7 +65,13 @@ class BossFightEnvironment(Environment):
         self.reset_game_state()
 
         self.boss = random.choice(self.bosses)
-        self.game_api.start_boss_fight(boss=self.boss, items=self.items, input_controller=self.input_controller)
+        
+        if isinstance(self.items, dict):
+            items = self.items.get(self.boss, list())
+        else:
+            items = self.items
+
+        self.game_api.start_boss_fight(boss=self.boss, items=items, input_controller=self.input_controller)
 
         super().new_episode(maximum_steps=maximum_steps, reset=reset)
 
@@ -96,6 +106,7 @@ class BossFightEnvironment(Environment):
 
         if self.game_state["damage_taken"]:
             self.game_state["steps_since_damage_taken"] = 0
+            self.game_state["steps_since_damage_dealt"] = 100
         else:
             self.game_state["steps_since_damage_taken"] += 1
 
