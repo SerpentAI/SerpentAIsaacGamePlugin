@@ -34,7 +34,7 @@ class SerpentAIsaacGame(Game, metaclass=Singleton):
             "ITEMS": Items
         }
 
-        self.frame_transformation_pipeline_string = "RESIZE:100x100|GRAYSCALE|FLOAT"
+        self.frame_transformation_pipeline_string = "CROP:35,122,536,841|RESIZE:100x100|GRAYSCALE|FLOAT"
 
     @property
     def screen_regions(self):
@@ -52,7 +52,8 @@ class SerpentAIsaacGame(Game, metaclass=Singleton):
             HUD_HEART_11=(32, 180, 52, 202),
             HUD_HEART_12=(32, 204, 52, 226),
             HUD_BOSS_HP=(519, 371, 522, 592),
-            HUD_BOSS_SKULL=(496, 340, 529, 373)
+            HUD_BOSS_SKULL=(496, 340, 529, 373),
+            BOSS_FIGHT_AREA=(35, 122, 536, 841)
         )
 
         return regions
